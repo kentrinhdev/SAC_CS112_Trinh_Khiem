@@ -10,7 +10,7 @@
 import java.util.*;
 import java.util.Random;
 
-public class Test 
+public class gameRockPaperScissors 
 {
 	static int computerWins = 0;
 	static int playerWins = 0;
@@ -175,5 +175,4 @@ public class Test
 			System.out.println();
 		}
 	}
-
 }
