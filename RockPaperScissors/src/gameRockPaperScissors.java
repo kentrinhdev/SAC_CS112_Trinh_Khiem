@@ -1,178 +1,136 @@
-/** 
+/**
  * Khiem Trinh
- * Professor Durendal
- * CS112 Section 88195
- * Tuesday 7 PM
- * Week 4 Homework RockPaperScissors Game
- * Rules: Rock beats Scissors / Scissors beats Paper / Paper beats Rock
- */
-
-import java.util.*;
-import java.util.Random;
-
-public class gameRockPaperScissors 
+* Professor Durendal
+* CS112 Section 88195
+* Tuesday 7 PM
+* Week 4 Homework RockPaperScissors Game
+* Rules: Rock beats Scissors / Scissors beats Paper / Paper beats Rock
+*/
+ 
+import java.util.Scanner;
+ 
+public class gameRockPaperScissors
 {
-	static int computerWins = 0;
-	static int playerWins = 0;
-	static int numDraws = 0;
-
-	static final int ROCK = 1;
-	static final int PAPER = 2;
-	static final int SCISSORS = 3;
-
-	public static void main(String[] args) {
-		System.out.print("Enter your name and press return: ");
-
-		Scanner input = new Scanner(System.in);
-		String name = input.nextLine();
-
-		System.out.println("Welcome " +name+ " to a game of Rock-Paper-Scissors!");
-		System.out.print("Enter the number of rounds you want to play and press return: ");
-
-		int numGames = input.nextInt();
-		playGame(name,numGames,input);
-	
-	}
-
-	public static void playGame(String name, int numGames, Scanner input) // Initializing the game
-	{
-		int count = 0;
-		boolean play = true;
-
-		String yourChoice = "";
-		String computerChoice = "";
-		while(play == true) // The while loop escapes when our play flag is false
-		{
-			count++;
-
-			if(numGames <= count )
-			{
-				play = false;
-			}
-
-			System.out.println("Round " + count);
-			System.out.print(name + ", make your move [ 1 = Rock, 2 = Paper, 3 = Scissors ]: ");
-			int choice = input.nextInt();
-			Random rand = new Random();
-			int compChoice = rand.nextInt(3) +1;
-			yourChoice = "";
-			computerChoice = "";
-			if(choice == ROCK)
-			{
-				yourChoice+=name+" plays Rock ...";
-			}
-			else if(choice == PAPER)
-			{
-				yourChoice+=name+" plays Paper ...";
-			}
-			else if(choice == SCISSORS)
-			{
-				yourChoice+=name+" plays Scissors ...";
-			}
-			if(compChoice == 1)
-			{
-				computerChoice+="Computer plays Rock -- ";
-			}
-			else if(compChoice == 2)
-			{
-				computerChoice+="Computer plays Paper -- ";
-			}
-			else if(compChoice == 3)
-			{
-				computerChoice+="Computer plays Scissors -- ";
-			}
-			System.out.print(computerChoice + yourChoice );
-			System.out.println();
-			checkOutcome(choice, compChoice, computerChoice, yourChoice, name, play);
-		}
-		System.out.println("You played " +count +" games of Rock Paper Scissors.");
-		System.out.println("The Computer won "+computerWins+" times.");
-		System.out.println(name+ " won "+playerWins+" times.");
-		System.out.println("There were "+numDraws+" draws.");
-		if(playerWins > computerWins)
-		{
-			System.out.println("You are the winner of Rock Paper Scissors!");
-		}
-		else if(computerWins > playerWins)
-		{
-			System.out.println("The Computer is the winner of Rock Paper Scissors!");
-		}
-		else if(playerWins == computerWins)
-		{
-			System.out.println("It is a tie. Everyone is a winner of Rock Paper Scissors!");
-		}
-	}
-	// Checks the player's choice against the Computer's choice
-	public static void checkOutcome(int choice, int compChoice, String computerChoice, String yourChoice, String name, boolean play)
-	{
-		if(choice == 1 && compChoice == 1 || choice == 2 && compChoice == 2 || choice == 3 && compChoice==3)
-		{
-			tieGame(play);
-			numDraws++;
-		}
-		if(choice == 1 && compChoice == 2 || choice == 2 && compChoice == 3 || choice == 3 && compChoice == 1)
-		{
-			youLose(computerChoice, play);
-			computerWins++;
-		}
-		if(choice == 1 && compChoice == 3 || choice == 2 && compChoice == 1 || choice == 3 && compChoice == 2 )
-		{
-			youWin(yourChoice, name, play);
-			playerWins++;
-		}
-	}
-	// The three outcome methods deciding the fate of the player's choice
-	public static void youLose(String computerChoice, boolean play)
-	{
-		if(play == true)
-		{
-			if(computerChoice.equals("Computer chooses Rock, "))
-			{
-				System.out.println("Rock breaks Scissors, Computer wins.");
-				System.out.println();
-			}
-			else if(computerChoice.equals("Computer chooses Paper, "))
-			{
-				System.out.println("Paper covers Rock, Computer wins.");
-				System.out.println();
-			}
-			else if(computerChoice.equals("Computer chooses Scissors, "))
-			{
-				System.out.println("Scissors cuts Paper, Computer wins.");
-				System.out.println();
-			}
-		}
-
-	}
-
-	public static void youWin(String yourChoice, String name, boolean play)
-	{
-		if(play == true)
-		{	
-			if(yourChoice.equals(name+" chose Rock"))
-			{
-				System.out.println("Rock breaks Scissors - YOU WIN!");
-				System.out.println();
-			}
-			else if(yourChoice.equals(name+" chose Paper"))
-			{
-				System.out.println("Paper covers Rock - YOU WIN!");
-				System.out.println();
-			}
-			else if(yourChoice.equals(name+" chose Scissors"))
-			{
-				System.out.println("Scissors cuts Paper - YOU WIN!");
-				System.out.println();
-			}
-		}
-	}
-
-	public static void tieGame(boolean play)
-	{
-		if(play == true)
-		{
-			System.out.println("This round is a draw");
-			System.out.println();
-		}
-	}
+       public static void main(String[] args)
+       {
+              // 1 = Rock, 2 = Paper, 3 = Scissors
+             
+              // Rock smashes Scissors: 1 beats 3 and 1 loses to 2.
+              // If cpu plays 1=Rock, and player plays 1=Rock then it's a draw.
+              // If cpu plays 1=Rock, and player plays 2=Paper then Player wins.
+              // If cpu plays 1=Rock, and player plays 3=Scissors then CPU wins.
+             
+              // Scissors cuts Paper: 3 beats 2 and 3 loses to 1.
+              // If cpu plays 2=Paper, and player plays 1=Rock then CPU wins.
+              // If cpu plays 2=Paper, and player plays 2=Paper then it's a draw.
+              // If cpu plays 2=Paper, and player plays 3=Scissors then Player wins.            
+             
+              // Paper covers Rock: 2 beats 1 and 2 loses to 3.
+              // If cpu plays 3=Scissors, and player plays 1=Rock then Player wins.
+              // If cpu plays 3=Scissors, and player plays 2=Paper then CPU wins.
+              // If cpu plays 3=Scissors, and player plays 3=Scissors then it's a draw. 
+             
+              Scanner input = new Scanner(System.in);
+              Scanner scan = new Scanner(System.in);
+             
+              int count = 0;
+              int cpuInt;
+              String computerMove = "";
+              int playerInt;
+              String playerMove = "";
+              String answer = "";
+                 
+              do
+              {
+                     do
+                     {
+                           count++;
+                           cpuInt=1+(int)(Math.random()*3);
+                           if (cpuInt == 1)
+                           {
+                                  computerMove = "Rock";
+                                  System.out.println("Round " + count);
+                                  System.out.println("The computer's move is " + computerMove);
+                           }
+                           else if (cpuInt == 2)
+                           {
+                                  computerMove = "Paper";
+                                  System.out.println("Round " + count);
+                                  System.out.println("The computer's move is " + computerMove);
+                           }
+                           else if (cpuInt == 3)
+                           {
+                                  computerMove = "Scissors";
+                                  System.out.println("Round " + count);
+                                  System.out.println("The computer's move is " + computerMove);
+                           }
+                          
+                           System.out.print("Enter you move. 1 = Rock, 2 = Paper, 3 = Scissors: ");
+                           playerInt = input.nextInt();
+ 
+                           if (playerInt == 1)
+                           {
+                                  playerMove = "Rock";
+                                  System.out.println("Your move is " + playerMove);
+                           }
+                           else if (playerInt == 2)
+                           {
+                                  playerMove = "Paper";
+                                  System.out.println("Your move is " + playerMove);
+                           }
+                           else if (playerInt == 3)
+                           {
+                                  playerMove = "Scissors";
+                                  System.out.println("Your move is " + playerMove);
+                           }
+                          
+// CPU Plays Rock --------------------------------------------------------------------------------------------------
+                           if (cpuInt == 1 && playerInt == 1)
+                           {
+                                  System.out.println(playerMove + " matches " + computerMove + ". It's a draw.\n");
+                           }
+                           else if (cpuInt == 1 && playerInt == 2)
+                           {
+                                  System.out.println(playerMove + " covers " + computerMove + ". You Win!\n");
+                           }                   
+                           else if (cpuInt == 1 && playerInt == 3)
+                           {
+                                  System.out.println(computerMove + " smashes " + playerMove + ". The CPU Wins!\n");
+                           }     
+// CPU Plays Paper --------------------------------------------------------------------------------------------------
+                           if (cpuInt == 2 && playerInt == 1)
+                           {
+                                  System.out.println(computerMove + " covers " + playerMove + ". The CPU Wins!\n");
+                           }
+                           else if (cpuInt == 2 && playerInt == 2)
+                           {
+                                  System.out.println(playerMove + " matches " + computerMove + ". It's a draw.\n");
+                           }                   
+                           else if (cpuInt == 2 && playerInt == 3)
+                           {
+                                  System.out.println(playerMove + " cuts " + computerMove + ". You Win!\n");
+                           }
+// CPU Plays Scissors ------------------------------------------------------------------------------------------------
+                           if (cpuInt == 3 && playerInt == 1)
+                           {
+                                  System.out.println(playerMove + " smashes " + computerMove + ". You Win!\n");
+                           }
+                           else if (cpuInt == 3 && playerInt == 2)
+                           {
+                                  System.out.println(computerMove + " cuts " + playerMove + ". The CPU Wins!\n");
+                           }                   
+                           else if (cpuInt == 3 && playerInt == 3)
+                           {
+                                  System.out.println(playerMove + " matches " + computerMove + ". It's a draw.\n");
+                           }
+                          
+                     }
+                           while (playerMove != computerMove);
+                                  System.out.println("Your move matches the computer's move. There is no winner.");
+                                  System.out.print("Do you want to play again? Enter Y or N: ");
+                                  answer = scan.next();
+              }     
+              while(answer.equalsIgnoreCase("Y"));
+              System.out.println("Thank you for playing Rock-Paper-Scissors. Good-Bye!");
+       }
 }
